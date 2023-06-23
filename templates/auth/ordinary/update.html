@@ -1,0 +1,47 @@
+
+{% extends "base.html" %}
+
+{% block title %} update user {% endblock title %}
+{% block content %}
+
+    <h1 class="lead my-4">update...</h1>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="lead">update user</h3>
+        </div>
+
+        <div class="card-body border-bottom py-3">
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label>nickname</label>
+                <input
+                    type="text"
+                    name="nickname"
+                    class="form-control"
+                    value="{{ obj.nickname }}"
+                />
+            </div>
+
+            <div class="mb-3">
+                <label>file</label>
+                <input
+                    type="file"
+                    class="form-control"
+                    name="file"
+                    placeholder="item image"
+                />
+            </div>
+
+            <button type="submit" class="btn btn-outline-primary btn-sm">
+                submit
+            </button>
+        </form>
+
+        </div>
+
+    </div>
+    
+{% endblock content %}

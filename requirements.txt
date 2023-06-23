@@ -1,0 +1,6 @@
+django
+bcrypt
+passlib
+python-dotenv
+PyJWT
+

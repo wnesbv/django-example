@@ -1,0 +1,20 @@
+ 
+{% extends "base.html" %}
+{% block title %} logout user {% endblock %}
+
+{% block content %}
+
+    <h1 class="lead my-4">logout</h1>
+    
+    <div class="card mt-5">
+
+        <form method="POST">
+            {% csrf_token %}
+            <button class="btn btn-sm btn-outline-danger" type="submit">
+                logout
+            </button>
+        </form>
+        
+    </div>
+
+{% endblock %}

@@ -1,0 +1,5 @@
+{% autoescape off %}
+Hi {{ entry.mail }},
+Please click on the link to confirm your registration,
+http://{{ domain }}{% url 'ordinary_resend_verification_email' token=token %}
+{% endautoescape %}

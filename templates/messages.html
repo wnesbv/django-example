@@ -1,0 +1,11 @@
+% rebase('base.html', title='messages')
+
+
+    <div class="container">
+        <h1 class="lead my-4">messages</h1> 
+        % if msg:
+            <span>messages: {{ msg }}</span>
+        % end
+        <hr>
+        <a class="page-link my-4" href="/blog">View my blog</a> 
+    </div>

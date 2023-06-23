@@ -1,0 +1,57 @@
+
+{% extends "base.html" %}
+
+{% block title %} register {% endblock title %}
+{% block content %}
+
+    <h1 class="lead my-4">register...</h1>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="lead">register user</h3>
+        </div>
+
+        <div class="card-body border-bottom py-3">
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label>username</label>
+                <input
+                    type="text"
+                    required
+                    placeholder="username"
+                    name="username"
+                    class="form-control"
+                />
+            </div>
+            <div class="mb-3">
+                <label>mail</label>
+                <input
+                    type="email"
+                    required
+                    placeholder="mail"
+                    name="mail"
+                    class="form-control"
+                />
+            </div>
+            <div class="mb-3">
+                <label>password</label>
+                <input
+                    type="password"
+                    required
+                    placeholder="password"
+                    name="password"
+                    class="form-control"
+                />
+            </div>
+            <button type="submit" class="btn btn-outline-primary btn-sm">
+                submit
+            </button>
+        </form>
+
+        </div>
+
+    </div>
+    
+{% endblock content %}

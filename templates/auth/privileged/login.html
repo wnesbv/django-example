@@ -1,0 +1,64 @@
+
+{% extends "base.html" %}
+
+{% block title %} login privileged {% endblock title %}
+{% block content %}
+
+    <h1 class="lead my-4">login...</h1>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="lead">login user privileged</h3>
+        </div>
+
+        <div class="card-body border-bottom py-3">
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label>username</label>
+                <input
+                    type="text"
+                    required
+                    placeholder="username"
+                    name="username"
+                    class="form-control"
+                />
+            </div>
+            <div class="mb-3">
+                <label>password</label>
+                <input
+                    type="password"
+                    required
+                    placeholder="password"
+                    name="password"
+                    class="form-control"
+                />
+            </div>
+
+            <div class="mb-3">
+                <label>mail</label>
+                <input
+                    type="email"
+                    required
+                    placeholder="mail"
+                    name="mail"
+                    class="form-control"
+                />
+            </div>
+            
+            <button type="submit" class="btn btn-outline-primary btn-sm">
+                submit
+            </button>
+        </form>
+
+        </div>
+
+        <div class="d-flex mt-4">
+        <a class="page-link m-2" href="/privileged/reset-email">reset email</a>
+        <a class="page-link m-2" href="/privileged/reset-password">reset password</a>
+        </div>
+
+    </div>
+    
+{% endblock content %}
