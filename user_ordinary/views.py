@@ -7,9 +7,11 @@ from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 
 from django.contrib import messages
-from django.contrib.sites.shortcuts import get_current_site
-from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
+from django.core.exceptions import PermissionDenied
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+
 
 from . import models
 
@@ -29,42 +31,42 @@ def match_mail(mail):
 
 def get_token(request):
     token = request.COOKIES.get("ordinary")
+
+    if not token:
+        raise PermissionDenied
+
     return token
 
 
 def decode_token(request):
-    while True:
-        token = get_token(request)
+    token = get_token(request)
 
-        if not token:
-            break
+    if not token:
+        pass
 
-        payload = jwt.decode(token, settings.SECRET_KEY, settings.JWT_ALGORITHM)
-        mail = payload["mail"]
+    payload = jwt.decode(token, settings.SECRET_KEY, settings.JWT_ALGORITHM)
+    mail = payload["mail"]
 
-        return mail
+    return mail
 
 
 def get_user(request):
-    while True:
-        mail = decode_token(request)
 
-        if not mail:
-            break
+    mail = decode_token(request)
 
-        user = models.UserOrdinary.objects.get(mail=mail)
+    if not mail:
+        pass
 
-        if not user:
-            messages.info(request, "register..!")
-            return redirect("ordinary/register")
-        return user
+    user = models.UserOrdinary.objects.get(mail=mail)
+    return user
 
 
 def get_active_user(request):
+
     user = get_user(request)
 
     if not user:
-        messages.info(request, "login..!")
+        messages.info(request, "ordinary active user to login..!")
         return redirect("ordinary/login")
 
     if not user.email_verified:

@@ -7,11 +7,13 @@
 <span><sup>request-user</sup> | {{ request.user }}</span>
 <hr>
 
+
+
 {% if privileged.mail %}
 <span><sup>privileged-active-user</sup> | {{ privileged.mail }}</span>
 {% endif %}
-
 <hr>
+
 {% if ordinary.mail %}
 <span><sup>ordinary-active-user</sup> | {{ ordinary.mail }}</span>
 {% endif %}
@@ -83,5 +85,7 @@
 
 </ul>
 </div>
+
+
 
 {% endblock %}

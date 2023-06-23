@@ -8,15 +8,16 @@ from django.conf import settings
 
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
+
 from django.contrib import messages
-
+from django.core.mail import EmailMessage
+from django.core.exceptions import PermissionDenied
 from django.contrib.auth import logout
-from django.contrib.auth.models import User
 from django.contrib.auth import login as privileged_loginv
-
+from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
-from django.core.mail import EmailMessage
+
 
 from . import models
 
@@ -36,14 +37,20 @@ def match_mail(mail):
 
 def get_token(request):
     token = request.COOKIES.get("privileged")
+
+    if not token:
+        raise PermissionDenied
+
     return token
 
 def decode_token(request):
 
     while True:
         token = get_token(request)
+
         if not token:
             break
+
         payload = jwt.decode(token, settings.SECRET_KEY, settings.JWT_ALGORITHM)
         mail = payload["mail"]
 
@@ -59,10 +66,6 @@ def get_user(request):
             break
 
         user = models.UserPrivileged.objects.get(mail=mail)
-
-        if not user:
-            messages.info(request, "register..!")
-            return redirect("privileged/register")
         return user
 
 
