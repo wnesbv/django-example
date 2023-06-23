@@ -9,16 +9,12 @@ from user_ordinary import  models as ord_models, views as ord_views
 
 def Index_view(request):
 
-    if request.COOKIES.get("ordinary"):
+    if request.COOKIES.get("ordinary") and request.COOKIES.get("privileged"):
 
         privileged_list = pri_models.UserPrivileged.objects.all()
         privileged = pri_views.get_active_user(request)
         privileged_owning = pri_views.match_mail(privileged)
-
-
         # ...
-
-
         ordinary_list = ord_models.UserOrdinary.objects.all()
         ordinary = ord_views.get_active_user(request)
         ordinary_owning = ord_views.match_mail(ordinary)
@@ -33,4 +29,14 @@ def Index_view(request):
         }
 
         return render(request, "index.html", content)
-    return render(request, "base.html")
+
+    privileged_list = pri_models.UserPrivileged.objects.all()
+    # ...
+    ordinary_list = ord_models.UserOrdinary.objects.all()
+
+    content = {
+        "privileged_list": privileged_list,
+        "ordinary_list": ordinary_list,
+    }
+
+    return render(request, "all_user.html", content)

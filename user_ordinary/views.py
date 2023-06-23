@@ -22,8 +22,8 @@ def match_nick(nickname):
 
 
 def match_mail(mail):
-    mail = models.UserOrdinary.objects.filter(mail=mail)
-    return mail
+    obj = models.UserOrdinary.objects.filter(mail=mail)
+    return obj
 
 
 # ...
@@ -155,11 +155,11 @@ def login_view(request):
         mail = request.POST.get("mail")
         password = request.POST.get("password")
         # ...
-        entry = models.UserOrdinary.objects.get(mail=mail)
-        # ...
-        if entry.email_verified:
+        if match_mail(mail):
             # ...
-            if match_mail(mail):
+            entry = models.UserOrdinary.objects.get(mail=mail)
+            # ...
+            if entry.email_verified:
                 # ...
                 if bcrypt.checkpw(password.encode(), entry.password):
                     # ...
@@ -184,10 +184,10 @@ def login_view(request):
                 messages.info(request, "Sorry.. The password doesn't match..!")
                 return redirect("/")
 
-            messages.info(request, "Sorry.. NO user..!")
+            messages.info(request, "Sorry.. NO email verified..!")
             return redirect("/")
 
-        messages.info(request, "Sorry.. NO email verified..!")
+        messages.info(request, "Sorry.. NO email user..!")
         return redirect("/")
 
 

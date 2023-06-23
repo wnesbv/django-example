@@ -165,45 +165,50 @@ def login(request):
         password = request.POST.get("password")
         mail = request.POST.get("mail")
         # ...
-        entry = models.UserPrivileged.objects.get(mail=mail)
-        # ...
-        if entry.email_verified:
+        if match_username(username):
             # ...
-            if match_username(username):
+            if match_mail(mail):
                 # ...
-                user = models.User.objects.get(username=username)
+                entry = models.UserPrivileged.objects.get(mail=mail)
                 # ...
-                if pbkdf2_sha256.verify(password, user.password):
+                if entry.email_verified:
                     # ...
-                    privileged_loginv(request, user)
+                    user = models.User.objects.get(username=username)
                     # ...
-                    payload = {
-                        "id": user.id,
-                        "username": user.username,
-                        "mail": entry.mail,
-                    }
+                    if pbkdf2_sha256.verify(password, user.password):
+                        # ...
+                        privileged_loginv(request, user)
+                        # ...
+                        payload = {
+                            "id": user.id,
+                            "username": user.username,
+                            "mail": entry.mail,
+                        }
 
-                    privileged = jwt.encode(
-                        payload, settings.SECRET_KEY, settings.JWT_ALGORITHM
-                    )
-                    # ...
+                        privileged = jwt.encode(
+                            payload, settings.SECRET_KEY, settings.JWT_ALGORITHM
+                        )
+                        # ...
 
-                    response = redirect("/")
-                    response.set_cookie(
-                        "privileged",
-                        privileged,
-                        path="/",
-                        httponly=True,
-                    )
-                    return response
+                        response = redirect("/")
+                        response.set_cookie(
+                            "privileged",
+                            privileged,
+                            path="/",
+                            httponly=True,
+                        )
+                        return response
 
-                messages.info(request, "Sorry.. The password doesn't match..!")
+                    messages.info(request, "Sorry.. The password doesn't match..!")
+                    return redirect("/")
+
+                messages.info(request, "Sorry.. NO email verified..!")
                 return redirect("/")
 
-            messages.info(request, "Sorry.. NO user..!")
+            messages.info(request, "Sorry.. NO email..!")
             return redirect("/")
 
-        messages.info(request, "Sorry.. NO email verified..!")
+        messages.info(request, "Sorry.. NO user..!")
         return redirect("/")
 
 
