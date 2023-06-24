@@ -1,23 +1,12 @@
 {% extends "base.html" %}
-{% block title %} index {% endblock %}
+{% block title %} all index user list {% endblock %}
 
 {% block content %}
 
-<h1 class="lead my-4">index page</h1>
+<h1 class="lead my-4">index user list</h1>
 <span><sup>request-user</sup> | {{ request.user }}</span>
 <hr>
 
-
-
-{% if privileged.mail %}
-<span><sup>privileged-active-user</sup> | {{ privileged.mail }}</span>
-{% endif %}
-<hr>
-
-{% if ordinary.mail %}
-<span><sup>ordinary-active-user</sup> | {{ ordinary.mail }}</span>
-{% endif %}
-<hr>
 
 <div class="card p-2">
 <h2 class="lead my-4">privileged</h2>
@@ -28,25 +17,6 @@
         <li class="list-group-item">
             <span>{{ i.nickname }}</span>
             <span>{{ i.mail }}</span>
-        </li>
-    {% endfor %}
-
-</ul>
-
-<ul class="list-group list-group-horizontal">
-
-    {% for i in  privileged_owning %}
-        <li class="list-group-item">{{ i.id }}</li>
-        <li class="list-group-item">
-            <span>{{ i.nickname }}</span>
-
-            <a class="page-link" href="privileged/update/{{ i.id }}/">
-                update {{ i.mail }}
-            </a>
-            <a class="page-link" href="privileged/delete/{{ i.id }}/">
-                delete {{ i.mail }}
-            </a>
-
         </li>
     {% endfor %}
 
@@ -66,26 +36,7 @@
 
 </ul>
 
-<ul class="list-group list-group-horizontal">
-
-    {% for i in  ordinary_owning %}
-        <li class="list-group-item">{{ i.id }}</li>
-        <li class="list-group-item">
-            <span>{{ i.nickname }}</span>
-
-            <a class="page-link" href="ordinary/update/{{ i.id }}/">
-                update {{ i.mail }}
-            </a>
-            <a class="page-link" href="ordinary/delete/{{ i.id }}/">
-                delete {{ i.mail }}
-            </a>
-
-        </li>
-    {% endfor %}
-
-</ul>
 </div>
-
 
 
 {% endblock %}

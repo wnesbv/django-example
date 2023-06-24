@@ -99,9 +99,6 @@ MEDIA_ROOT = BASE_DIR / "media/"
 DISABLE_COLLECTSTATIC = 1
 
 
-DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
-
-
 EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
 EMAIL_USE_TLS = True
 EMAIL_HOST = os.getenv("EMAIL_HOST")
@@ -117,3 +114,6 @@ TIME_ZONE = "UTC"
 USE_I18N = False
 USE_L10N = True
 USE_TZ = True
+
+
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"

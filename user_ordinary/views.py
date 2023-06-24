@@ -380,12 +380,15 @@ def update_view(request, id):
         if get_id(id) and get_active_user(request):
             # ...
             obj = get_id(id)
+            user = get_user(request)
             # ...
-            content = {"obj": obj}
-            return render(request, "auth/ordinary/update.html", content)
+            if obj.mail == user.mail:
+                content = {"obj": obj}
+                return render(request, "auth/ordinary/update.html", content)
 
-        messages.info(request, "login..")
-        return redirect("ordinary/login")
+            messages.info(request, "login..? not yours..")
+            return redirect("/ordinary/login")
+        return False
     # ...
     if request.method == "POST":
         # ...
@@ -400,7 +403,7 @@ def update_view(request, id):
 
         messages.info(request, "OK..!")
         return redirect("/")
-
+    messages.info(request, "Post ok..!")
 
 def logout_view(request):
     # ...
@@ -408,6 +411,7 @@ def logout_view(request):
         # ...
         if get_active_user(request):
             return render(request, "auth/logout.html")
+        return False
     # ...
     if request.method == "POST":
         # ...
@@ -418,6 +422,7 @@ def logout_view(request):
 
             messages.info(request, "you have logged out of your account..!")
             return response
+        return False
 
 
 def delete_view(request, id):
@@ -437,3 +442,5 @@ def delete_view(request, id):
             # ...
             messages.info(request, "user delete..!")
             return redirect("/")
+
+        return False
