@@ -405,6 +405,7 @@ def update_view(request, id):
         return redirect("/")
     messages.info(request, "Post ok..!")
 
+
 def logout_view(request):
     # ...
     if request.method == "GET":
