@@ -1,14 +1,14 @@
 
 {% extends "base.html" %}
 
-{% block title %} update user {% endblock title %}
+{% block title %} update ordinary {% endblock title %}
 {% block content %}
 
     <h1 class="lead my-4">update...</h1>
 
     <div class="card">
         <div class="card-header">
-            <h3 class="lead">update user</h3>
+            <h3 class="lead">update ordinary {{ i.mail }}</h3>
         </div>
 
         <div class="card-body border-bottom py-3">
@@ -21,7 +21,7 @@
                     type="text"
                     name="nickname"
                     class="form-control"
-                    value="{{ obj.nickname }}"
+                    value="{{ i.nickname }}"
                 />
             </div>
 
@@ -31,13 +31,29 @@
                     type="file"
                     class="form-control"
                     name="file"
-                    placeholder="item image"
+                    placeholder="user image"
                 />
             </div>
 
-            <button type="submit" class="btn btn-outline-primary btn-sm">
-                submit
-            </button>
+            {% if i.file %}
+            <figure class="list-group-item list-group-item-danger d-inline-block p-3">
+                <figcaption><sup>image</sup></figcaption>
+
+                <img width="128" src="{{ i.file }}" />
+                <input
+                    type="checkbox"
+                    name="del_bool"
+                    class="ms-2 form-check-input"
+                />
+                <sup class="m-2">delete</sup>
+            </figure>
+            {% endif %}
+
+            <div class="m-2">
+                <button type="submit" class="btn btn-outline-primary btn-sm">
+                    submit
+                </button>
+            </div>
         </form>
 
         </div>

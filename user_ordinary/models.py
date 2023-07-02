@@ -9,7 +9,7 @@ class UserOrdinary(models.Model):
     nickname = models.CharField(max_length=30, unique=True)
     mail = models.EmailField(max_length=120, unique=True)
     password = models.BinaryField()
-    file = models.FileField(upload_to="auth_photo/", null=True, blank=True)
+    file = models.FileField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
     email_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField("Date of creation", null=True)

@@ -7,11 +7,10 @@
 <span><sup>request-user</sup> | {{ request.user }}</span>
 <hr>
 
-
 <p>session {{ obj }}</p>
 
 {% if privileged.mail %}
-<span><sup>privileged-active-user</sup> | {{ privileged.mail }}</span>
+<span><sub>privileged-active-user</sub> | {{ privileged.mail }}</span>
 {% endif %}
 <hr>
 
@@ -28,7 +27,7 @@
     {% for i in  privileged_list %}
         <li class="list-group-item">{{ i.id }}</li>
         <li class="list-group-item">
-            <span>{{ i.nickname }}</span>
+            <span>nickname: {{ i.nickname }}</span>
             <span>{{ i.mail }}</span>
         </li>
     {% endfor %}
@@ -40,11 +39,16 @@
     {% for i in  privileged_owning %}
         <li class="list-group-item">{{ i.id }}</li>
         <li class="list-group-item">
-            <span>{{ i.nickname }}</span>
-
+            <span>nickname: {{ i.nickname }}</span>
+            <hr>
+            <a class="page-link" href="privileged/details/{{ i.id }}/">
+                details {{ i.mail }}
+            </a>
+            <hr>
             <a class="page-link" href="privileged/update/{{ i.id }}/">
                 update {{ i.mail }}
             </a>
+            <hr>
             <a class="page-link" href="privileged/delete/{{ i.id }}/">
                 delete {{ i.mail }}
             </a>

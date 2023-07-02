@@ -1,5 +1,8 @@
+
 from datetime import datetime, timedelta
-import os, bcrypt, jwt
+from pathlib import Path
+
+import io, os, bcrypt, jwt
 
 from django.conf import settings
 
@@ -12,6 +15,7 @@ from django.core.exceptions import PermissionDenied
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 
+from . import img
 
 from . import models
 
@@ -58,6 +62,7 @@ def get_user(request):
         pass
 
     user = models.UserOrdinary.objects.get(mail=mail)
+    print("mail..", user)
     return user
 
 
@@ -374,36 +379,61 @@ def reset_password_confirm(request, token):
 
 
 def update_view(request, id):
-    # ...
+
+    mdl = "ordinary"
+    basewidth = 800
+
     if request.method == "GET":
         # ...
         if get_id(id) and get_active_user(request):
             # ...
-            obj = get_id(id)
+            i = get_id(id)
             user = get_user(request)
             # ...
-            if obj.mail == user.mail:
-                content = {"obj": obj}
+            if i.mail == user.mail:
+                content = {"i": i}
                 return render(request, "auth/ordinary/update.html", content)
 
             messages.info(request, "login..? not yours..")
             return redirect("/ordinary/login")
-        return False
-    # ...
+
     if request.method == "POST":
+        # ...
+        i = get_id(id)
         # ...
         nickname = request.POST.get("nickname")
         file = request.FILES.get("file")
+        del_obj = request.POST.get("del_bool")
         # ...
-        obj = get_id(id)
-        # ...
-        obj.nickname = nickname
-        obj.file = file
-        obj.save()
 
-        messages.info(request, "OK..!")
+        if hasattr(file, 'name'):
+
+            i.nickname = nickname
+            i.file = img.img_creat(request, file, mdl)
+            i.save()
+
+            img.img_size(request, file, mdl, basewidth)
+
+            messages.info(request, "OK create file..!")
+            return redirect("/")
+
+        if del_obj:
+            if Path(f".{i.file}").exists():
+                Path.unlink(f".{i.file}")
+
+                i.nickname = nickname
+                i.file = None
+                i.modified_at = datetime.now()
+                i.save()
+
+                messages.info(request, "OK del file..!")
+                return redirect("/")
+
+        i.nickname = nickname
+        i.file = i.file
+        i.modified_at = datetime.now()
+        i.save()
         return redirect("/")
-    messages.info(request, "Post ok..!")
 
 
 def logout_view(request):

@@ -1,4 +1,10 @@
 
+import os
+from datetime import datetime, timedelta
+from pathlib import Path, PurePosixPath
+
+from PIL import Image
+
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
 from django.conf import settings
@@ -55,7 +61,6 @@ def Index_view(request):
         return render(request, "auth/ordinary/ordinary.html", content)
 
     privileged_list = pri_models.UserPrivileged.objects.all()
-    # ...
     ordinary_list = ord_models.UserOrdinary.objects.all()
 
     content = {
@@ -64,3 +69,21 @@ def Index_view(request):
     }
 
     return render(request, "index.html", content)
+
+
+def details_ordinary(request, id):
+    i = ord_models.UserOrdinary.objects.get(id=id)
+
+    content = {
+        "i": i,
+    }
+    return render(request, "auth/ordinary/details.html", content)
+
+
+def details_privileged(request, id):
+    i = pri_models.UserPrivileged.objects.get(id=id)
+
+    content = {
+        "i": i,
+    }
+    return render(request, "auth/privileged/details.html", content)

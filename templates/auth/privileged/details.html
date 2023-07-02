@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %} all details user {% endblock %}
+
+{% block content %}
+
+<h1 class="lead my-4">privileged user details</h1>
+
+
+<div class="card p-2">
+<h2 class="lead my-4">privileged</h2>
+<ul class="list-group list-group-horizontal">
+    {% if i %}
+        <li class="list-group-item">{{ i.id }}</li>
+        <li class="list-group-item">
+            <span>{{ i.nickname }}</span>
+            <span>{{ i.mail }}</span>
+        </li>
+    {% endif %}
+
+</ul>
+
+<figure>
+    <img class="shadow-sm mb-2" src="{{ i.file }}" alt="img">
+</figure>
+
+</div>
+
+
+{% endblock %}

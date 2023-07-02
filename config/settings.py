@@ -17,6 +17,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 SITE_ID = 1
+
+
 INSTALLED_APPS = [
     "core.apps.CoreConfig",
     "user_privileged.apps.UserPrivilegedConfig",

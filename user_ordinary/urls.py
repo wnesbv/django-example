@@ -1,6 +1,8 @@
 
 from django.urls import path
 
+from core import views as core
+
 from . import views
 
 
@@ -35,6 +37,9 @@ urlpatterns = [
         name="ordinary_resend_password_verification_email",
     ),
     # ...
+    path(
+        "details/<id>/", core.details_ordinary, name="details_ordinary"
+    ),
     path(
         "update/<id>/", views.update_view, name="ordinary_update"
     ),

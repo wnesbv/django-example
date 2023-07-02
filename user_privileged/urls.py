@@ -1,6 +1,8 @@
 
 from django.urls import path
 
+from core import views as core
+
 from . import views
 
 
@@ -36,6 +38,9 @@ urlpatterns = [
         name="privileged_resend_password_verification_email",
     ),
     # ...
+    path(
+        "details/<id>/", core.details_privileged, name="details_privileged"
+    ),
     path(
         "update/<id>/", views.update_view, name="privileged_update"
     ),

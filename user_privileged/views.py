@@ -1,5 +1,7 @@
 
 from datetime import datetime, timedelta
+from pathlib import Path
+
 import os, jwt
 
 from passlib.hash import pbkdf2_sha256
@@ -13,11 +15,13 @@ from django.contrib import messages
 from django.core.mail import EmailMessage
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth import logout
-from django.contrib.auth import login as privileged_loginv
+from django.contrib.auth import login as privileged_login
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 
+from . import img
 
 from . import models
 
@@ -42,6 +46,7 @@ def get_token(request):
         raise PermissionDenied
 
     return token
+
 
 def decode_token(request):
 
@@ -88,6 +93,12 @@ def get_active_user(request):
     return user
 
 
+def privileged_user(request):
+
+    user = get_object_or_404(User, id=request.user.id)
+    return user
+
+
 def get_id(id):
 
     user = get_object_or_404(models.UserPrivileged, id=id)
@@ -110,7 +121,8 @@ def register(request):
 
         if not res_nick:
             if not res_mail:
-                hashed = pbkdf2_sha256.hash(pswd)
+                #hashed = pbkdf2_sha256.hash(pswd)
+                hashed=make_password(pswd)
                 # ..
 
                 models.UserPrivileged.objects.create(
@@ -177,7 +189,7 @@ def login(request):
                     # ...
                     if pbkdf2_sha256.verify(password, user.password):
                         # ...
-                        privileged_loginv(request, user)
+                        privileged_login(request, user)
                         # ...
                         payload = {
                             "id": user.id,
@@ -397,31 +409,70 @@ def reset_password_confirm(request, token):
 
 
 def update_view(request, id):
-    # ...
+
+    mdl = "privileged"
+    basewidth = 800
+
     if request.method == "GET":
         # ...
         if get_id(id) and get_active_user(request):
             # ...
-            obj = get_id(id)
+            i = get_id(id)
             # ...
-            content = {"obj": obj}
+            content = {"i": i}
             return render(request, "auth/privileged/update.html", content)
 
         messages.info(request, "login..")
         return redirect("privileged/login")
+
     # ...
     if request.method == "POST":
         # ...
+        i = get_id(id)
+        # ...
+        username = request.POST.get("username")
         nickname = request.POST.get("nickname")
         file = request.FILES.get("file")
+        del_obj = request.POST.get("del_bool")
         # ...
-        obj = get_id(id)
-        # ...
-        obj.nickname = nickname
-        obj.file = file
-        obj.save()
+        obj = match_username(username)
 
-        messages.info(request, "OK..!")
+        if hasattr(file, 'name'):
+
+            obj.username = username
+
+            i.nickname = nickname
+            i.file = img.img_creat(request, file, mdl)
+            obj.update()
+            i.save()
+
+            img.img_size(request, file, mdl, basewidth)
+
+            messages.info(request, "OK create file..!")
+            return redirect("/")
+
+        if del_obj:
+            if Path(f".{i.file}").exists():
+                Path.unlink(f".{i.file}")
+
+                obj.username = username
+
+                i.nickname = nickname
+                i.file = None
+                i.modified_at = datetime.now()
+                obj.update()
+                i.save()
+
+                messages.info(request, "OK del file..!")
+                return redirect("/")
+
+        obj.username = username
+
+        i.nickname = nickname
+        i.file = i.file
+        i.modified_at = datetime.now()
+        obj.update()
+        i.save()
         return redirect("/")
 
 

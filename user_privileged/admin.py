@@ -7,7 +7,9 @@ class UserPrivilegedAdmin(ModelAdmin):
 
     list_display = (
         "username",
+        "nickname",
         "mail",
+        "password",
         "email_verified",
         "created_at",
         "modified_at",
