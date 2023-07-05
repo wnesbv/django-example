@@ -4,4 +4,5 @@ passlib
 python-dotenv
 PyJWT
 Pillow
+django-import-export
 

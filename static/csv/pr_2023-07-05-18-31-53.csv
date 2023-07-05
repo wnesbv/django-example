@@ -1,0 +1,7 @@
+id,username,password,is_active,nickname,mail,file,email_verified,created_at,modified_at,user_ptr_id
+
+5,five-5,pbkdf2_sha256$600000$SyzAhnJWKFGmDAq3UT8DVh$WbQ6peedNWpYnFraxwXhMyOG+TQi0kNGsei74EaSoes=,True,five,five@gmail.com,,True,,,5
+
+6,six-6,pbkdf2_sha256$600000$SyzAhnJWKFGmDAq3UT8DVh$WbQ6peedNWpYnFraxwXhMyOG+TQi0kNGsei74EaSoes=,True,six,six@gmail.com,,True,,,6
+
+7,seven-6,pbkdf2_sha256$600000$SyzAhnJWKFGmDAq3UT8DVh$WbQ6peedNWpYnFraxwXhMyOG+TQi0kNGsei74EaSoes=,True,seven,seven@gmail.com,,True,,,7

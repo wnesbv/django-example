@@ -3,7 +3,7 @@ from django.urls import path
 
 from core import views as core
 
-from . import views, csv_export, csv_import
+from . import views, csv_export
 
 
 urlpatterns = [

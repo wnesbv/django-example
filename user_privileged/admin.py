@@ -1,12 +1,36 @@
+
+from django.contrib import admin
 from django.contrib.admin import ModelAdmin, site
 from django.contrib.auth.admin import UserAdmin
 from .models import UserPrivileged
 
+from import_export import resources
+from import_export.admin import ImportMixin
 
-class UserPrivilegedAdmin(UserAdmin):
+
+class UserPrivilegedImpotAdmin(UserAdmin, ImportMixin,admin.ModelAdmin):
+    class PrivilegedResource(resources.ModelResource):
+        class Meta:
+            model = UserPrivileged
+            fields = (
+                "id",
+                "username",
+                "nickname",
+                "password",
+                "mail",
+                "email_verified",
+                "created_at",
+                "modified_at",
+                "user_ptr_id",
+            )
+
+    resource_class = PrivilegedResource
+
     list_display = (
+        "id",
         "username",
         "nickname",
+        "user_ptr",
         "password",
         "mail",
         "email_verified",
@@ -32,4 +56,4 @@ class UserPrivilegedAdmin(UserAdmin):
     )
 
 
-site.register(UserPrivileged, UserPrivilegedAdmin)
+site.register(UserPrivileged, UserPrivilegedImpotAdmin)
