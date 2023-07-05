@@ -14,5 +14,12 @@ class UserPrivileged(User):
     created_at = models.DateTimeField("Date of creation", null=True)
     modified_at = models.DateTimeField("Date of change", null=True)
 
+    user_ptr = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        parent_link=True,
+        primary_key=True,
+    )
+
     def __str__(self):
         return self.mail

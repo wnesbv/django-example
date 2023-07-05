@@ -54,7 +54,7 @@ def decode_token(request):
     return mail
 
 
-def get_user(request):
+def token_user(request):
 
     mail = decode_token(request)
 
@@ -68,7 +68,7 @@ def get_user(request):
 
 def get_active_user(request):
 
-    user = get_user(request)
+    user = token_user(request)
 
     if not user:
         messages.info(request, "ordinary active user to login..!")
@@ -388,7 +388,7 @@ def update_view(request, id):
         if get_id(id) and get_active_user(request):
             # ...
             i = get_id(id)
-            user = get_user(request)
+            user = token_user(request)
             # ...
             if i.mail == user.mail:
                 content = {"i": i}

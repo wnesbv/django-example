@@ -24,7 +24,7 @@
     {% for i in  privileged_list %}
         <li class="list-group-item">{{ i.id }}</li>
         <li class="list-group-item">
-            <span>nickname: {{ i.nickname }}</span>
+            <span>nickname: ({{ i.nickname }})</span>
             <span>{{ i.mail }}</span>
         </li>
     {% endfor %}
@@ -38,7 +38,7 @@
     {% for i in  ordinary_list %}
         <li class="list-group-item">{{ i.id }}</li>
         <li class="list-group-item">
-            <span>nickname: {{ i.nickname }}</span>
+            <span>nickname: ({{ i.nickname }})</span>
             <span>{{ i.mail }}</span>
         </li>
     {% endfor %}
@@ -50,7 +50,7 @@
     {% for i in  ordinary_owning %}
         <li class="list-group-item">{{ i.id }}</li>
         <li class="list-group-item">
-            <span>nickname: {{ i.nickname }}</span>
+            <span>nickname: ({{ i.nickname }})</span>
             <hr>
             <a class="page-link" href="ordinary/details/{{ i.id }}/">
                 details {{ i.mail }}

@@ -17,6 +17,9 @@ from user_ordinary import models as ord_models, views as ord_views
 
 
 def Index_view(request):
+
+    template = "auth/privileged/privileged.html"
+
     if request.COOKIES.get("privileged"):
         session_key = request.COOKIES.get("sessionid")
         session = Session.objects.get(session_key=session_key)
@@ -41,7 +44,7 @@ def Index_view(request):
             "ordinary_list": ordinary_list,
         }
 
-        return render(request, "auth/privileged/privileged.html", content)
+        return render(request, template, content)
 
     if request.COOKIES.get("ordinary"):
         # ...

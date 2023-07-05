@@ -1,9 +1,10 @@
 
-import os
 from datetime import datetime, timedelta
 from pathlib import Path, PurePosixPath
-
+import os
 from PIL import Image
+
+from django.contrib import messages
 
 from . import views
 
@@ -17,7 +18,7 @@ def img_creat(
     month = dtm.strftime("%m")
     day = dtm.strftime("%d")
 
-    user = views.get_user(request)
+    user = views.token_user(request)
     save_path = f"./static/upload/{mdl}/{user}/{year}/{month}/{day}/"
     file_path = f"{save_path}/{file.name}"
 
@@ -45,7 +46,7 @@ def img_url(
     month = dtm.strftime("%m")
     day = dtm.strftime("%d")
 
-    user = views.get_user(request)
+    user = views.token_user(request)
     save_path = f"./static/upload/{mdl}/{user}/{year}/{month}/{day}/"
     file_path = f"{save_path}/{file.name}"
 

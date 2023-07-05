@@ -62,7 +62,7 @@ def decode_token(request):
         return mail
 
 
-def get_user(request):
+def token_user(request):
 
     while True:
         mail = decode_token(request)
@@ -76,7 +76,7 @@ def get_user(request):
 
 def get_active_user(request):
 
-    user = get_user(request)
+    user = token_user(request)
 
     if not user:
         messages.info(request, "login..!")
@@ -187,7 +187,8 @@ def login(request):
                     # ...
                     user = models.User.objects.get(username=username)
                     # ...
-                    if pbkdf2_sha256.verify(password, user.password):
+                    #if pbkdf2_sha256.verify(password, user.password):
+                    if user.check_password(password):
                         # ...
                         privileged_login(request, user)
                         # ...

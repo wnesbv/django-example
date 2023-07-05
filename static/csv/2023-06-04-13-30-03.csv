@@ -1,8 +1,0 @@
-id,title,description,image_url,created_at,modified_at,owner_item_id
-
-1,item 01 user(one),description,,2023-05-30 10:06:59.326496,,1
-
-3,Create item..!,<p>Start CSV..!</p>,,2023-05-30 13:23:38.528279,2023-06-02 15:07:05.901040,1
-
-4,item,<p>start</p>,/static/img/photo.jpg,2023-06-03 11:55:52.555712,,1
-

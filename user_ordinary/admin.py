@@ -8,6 +8,7 @@ class UserOrdinaryAdmin(ModelAdmin):
     list_display = (
         "nickname",
         "mail",
+        "password",
         "is_active",
         "email_verified",
         "created_at",
