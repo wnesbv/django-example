@@ -1,7 +1,4 @@
 
-from datetime import datetime, timedelta
-from django.utils import timezone
-
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -11,8 +8,8 @@ class UserPrivileged(User):
     mail = models.EmailField(max_length=120, unique=True)
     file = models.FileField(null=True, blank=True)
     email_verified = models.BooleanField(default=False)
-    created_at = models.DateTimeField("Date of creation", null=True)
-    modified_at = models.DateTimeField("Date of change", null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    modified_at = models.DateTimeField(null=True)
 
     user_ptr = models.OneToOneField(
         User,

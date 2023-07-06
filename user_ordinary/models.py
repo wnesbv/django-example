@@ -12,8 +12,8 @@ class UserOrdinary(models.Model):
     file = models.FileField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
     email_verified = models.BooleanField(default=False)
-    created_at = models.DateTimeField("Date of creation", null=True)
-    modified_at = models.DateTimeField("Date of change", null=True)
+    created_at = models.DateTimeField(null=True)
+    modified_at = models.DateTimeField(null=True)
 
     def __str__(self):
         return self.mail

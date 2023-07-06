@@ -3,7 +3,7 @@ from django.urls import path
 
 from core import views as core
 
-from . import views, csv_export
+from . import views, csv_export, csv_import
 
 
 urlpatterns = [
@@ -48,6 +48,9 @@ urlpatterns = [
         "delete/<id>/", views.delete_view, name="privileged_delete"
     ),
     # ..
+    path(
+        "import-csv/", csv_import.import_csv, name="ordinary_import_csv"
+    ),
     path(
         "export-csv/", csv_export.export_csv, name="ordinary_export_csv"
     ),

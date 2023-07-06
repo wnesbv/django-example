@@ -1,6 +1,5 @@
 
-from django.contrib import admin
-from django.contrib.admin import ModelAdmin, site
+from django.contrib.admin import site
 from django.contrib.auth.admin import UserAdmin
 from .models import UserPrivileged
 
@@ -8,7 +7,7 @@ from import_export import resources
 from import_export.admin import ImportMixin
 
 
-class UserPrivilegedImpotAdmin(UserAdmin, ImportMixin,admin.ModelAdmin):
+class UserPrivilegedImpotAdmin(ImportMixin, UserAdmin):
     class PrivilegedResource(resources.ModelResource):
         class Meta:
             model = UserPrivileged
