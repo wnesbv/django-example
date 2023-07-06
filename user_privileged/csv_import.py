@@ -16,6 +16,17 @@ from import_export import resources
 class PersonResource(resources.ModelResource):
     class Meta:
         model = models.UserPrivileged
+        fields = (
+            "id",
+            "username",
+            "nickname",
+            "password",
+            "mail",
+            "email_verified",
+            "created_at",
+            "modified_at",
+            "user_ptr_id",
+        )
 
 
 from tablib import Dataset
