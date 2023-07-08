@@ -60,8 +60,6 @@ class UserPrivilegedImpotAdmin(ImportMixin, UserAdmin):
                     "password",
                     "mail",
                     "email_verified",
-                    "created_at",
-                    "modified_at",
                 )
             },
         ),
