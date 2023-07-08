@@ -9,7 +9,7 @@ class UserPrivileged(User):
     file = models.FileField(null=True, blank=True)
     email_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
-    modified_at = models.DateTimeField(null=True)
+    modified_at = models.DateTimeField(auto_now=True, null=True)
 
     user_ptr = models.OneToOneField(
         User,
