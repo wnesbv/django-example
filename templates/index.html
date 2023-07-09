@@ -4,19 +4,23 @@
 {% block content %}
 
 <h1 class="lead my-4">index user list</h1>
-<span><sup>request-user</sup> | {{ request.user }}</span>
+<span><sup class="d-block">request-user</sup> {{ request.user }}</span>
 <hr>
 
 <div class="card p-2">
 <h2 class="lead my-4">privileged</h2>
-<ul class="list-group list-group-flush">
+
+<ul class="list-group list-group-horizontal flex-wrap">
+
     {% if privileged_list %}
     {% for i in  privileged_list %}
-        <li class="list-group-item">{{ i.id }}</li>
-        <li class="list-group-item">
-            <span>username: ({{ i.user_ptr.username }})</span>
-            <span>nickname: ({{ i.nickname }})</span>
-            <span>{{ i.mail }}</span>
+        <li class="list-group-item my-2"><sup>id</sup> {{ i.id }}</li>
+        <li class="list-group-item my-2">
+            <span><sup class="d-block mt-2">username</sup> ({{ i.user_ptr.username }})</span>
+            <hr>
+            <span><sup class="d-block">nickname</sup> ({{ i.nickname }})</span>
+            <hr>
+            <span><sup class="d-block">mail</sup> {{ i.mail }}</span>
         </li>
     {% endfor %}
     {% endif %}
@@ -25,13 +29,15 @@
 
 
 <h2 class="lead my-4">ordinary</h2>
-<ul class="list-group list-group-flush">
+
+<ul class="list-group list-group-horizontal flex-wrap">
     {% if ordinary_list %}
     {% for i in  ordinary_list %}
-        <li class="list-group-item">{{ i.id }}</li>
-        <li class="list-group-item">
-            <span>nickname: ({{ i.nickname }})</span>
-            <span>{{ i.mail }}</span>
+        <li class="list-group-item my-2"><sup>id</sup> {{ i.id }}</li>
+        <li class="list-group-item my-2">
+            <span><sup class="d-block">nickname</sup> ({{ i.nickname }})</span>
+            <hr>
+            <span><sup class="d-block">mail</sup> {{ i.mail }}</span>
         </li>
     {% endfor %}
     {% endif %}

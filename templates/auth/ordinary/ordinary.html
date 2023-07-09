@@ -4,28 +4,29 @@
 {% block content %}
 
 <h1 class="lead my-4">index ordinary</h1>
-<span><sup>request-user</sup> | {{ request.user }}</span>
+<span><sup class="d-block">request-user</sup> {{ request.user }}</span>
 <hr>
 
 {% if privileged.mail %}
-<span><sup>privileged-active-user</sup> | {{ privileged.mail }}</span>
+<span><sub class="d-block">privileged-active-user</sub>: {{ privileged.mail }}</span>
 {% endif %}
 <hr>
 
 {% if ordinary.mail %}
-<span><sup>ordinary-active-user</sup> | {{ ordinary.mail }}</span>
+<span><sub class="d-block">ordinary-active-user</sub>: {{ ordinary.mail }}</span>
 {% endif %}
 <hr>
 
 <div class="card p-2">
 <h2 class="lead my-4">privileged</h2>
-<ul class="list-group list-group-flush">
+
+<ul class="list-group list-group-horizontal flex-wrap">
 
     {% for i in  privileged_list %}
-        <li class="list-group-item">{{ i.id }}</li>
-        <li class="list-group-item">
-            <span>nickname: ({{ i.nickname }})</span>
-            <span>{{ i.mail }}</span>
+        <li class="list-group-item my-2">
+            <span><sub class="d-block mt-2">nickname</sub> ({{ i.nickname }})</span>
+            <hr>
+            <span><sup class="d-block">mail</sup> {{ i.mail }}</span>
         </li>
     {% endfor %}
 
@@ -33,24 +34,26 @@
 
 
 <h2 class="lead my-4">ordinary</h2>
-<ul class="list-group list-group-flush">
+
+<ul class="list-group list-group-horizontal flex-wrap">
 
     {% for i in  ordinary_list %}
-        <li class="list-group-item">{{ i.id }}</li>
-        <li class="list-group-item">
-            <span>nickname: ({{ i.nickname }})</span>
-            <span>{{ i.mail }}</span>
+        <li class="list-group-item my-2"><sub>id</sub> {{ i.id }}</li>
+        <li class="list-group-item my-2">
+            <span><sub class="d-block mt-2">nickname</sub> ({{ i.nickname }})</span>
+            <hr>
+            <span><sup class="d-block">mail</sup> {{ i.mail }}</span>
         </li>
     {% endfor %}
 
 </ul>
 
-<ul class="list-group list-group-horizontal">
+<ul class="list-group list-group-horizontal flex-wrap">
 
     {% for i in  ordinary_owning %}
-        <li class="list-group-item">{{ i.id }}</li>
-        <li class="list-group-item">
-            <span>nickname: ({{ i.nickname }})</span>
+        <li class="list-group-item my-2"><sup>id</sup> {{ i.id }}</li>
+        <li class="list-group-item my-2">
+            <span><sub class="d-block mt-2">nickname</sub> ({{ i.nickname }})</span>
             <hr>
             <a class="page-link" href="ordinary/details/{{ i.id }}/">
                 details {{ i.mail }}
