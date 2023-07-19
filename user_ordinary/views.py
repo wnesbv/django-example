@@ -10,7 +10,9 @@ from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 
 from django.contrib import messages
+
 from django.core.mail import EmailMessage
+
 from django.core.exceptions import PermissionDenied
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
@@ -90,6 +92,15 @@ def get_id(id):
     return user
 
 
+# ...
+
+
+def send_user_email(mail_subject, message, to_email):
+    email = EmailMessage(mail_subject, message, to=[to_email],)
+    email.send()
+    return email
+
+
 def register(request):
     # ...
     if request.method == "GET":
@@ -140,8 +151,7 @@ def register(request):
                     },
                 )
                 to_email = mail
-                email = EmailMessage(mail_subject, message, to=[to_email])
-                email.send()
+                send_user_email(mail_subject, message, to_email)
 
                 messages.info(request, "open mail and follow the link")
                 return redirect("/")

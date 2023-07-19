@@ -12,6 +12,7 @@ urlpatterns = (
     path("privileged/", include("user_privileged.urls")),
 
     path("", include("core.urls")),
+    path("chat/", include("chat.urls")),
 
     path("admin/", admin.site.urls),
 
