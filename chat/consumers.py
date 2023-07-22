@@ -35,34 +35,35 @@ def get_or_user(mail):
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
 
+        self.group_name = self.scope["url_route"]["kwargs"]["uustr"]
+        print(" group_name..", self.group_name)
+
         username = self.scope["user"]
         if username != AnonymousUser() and "privileged" not in self.scope["cookies"]:
             self.user = self.scope["user"]
 
             user_id = self.scope["session"]["_auth_user_id"]
-            self.group_name = f"{user_id}"
 
             print(" user..", self.user)
             print(" _auth_user_id..", user_id)
 
+
         if "privileged" in self.scope["cookies"]:
+
             token = self.scope["cookies"]["privileged"]
             payload = jwt.decode(token, settings.SECRET_KEY, settings.JWT_ALGORITHM)
             mail = payload["mail"]
-            self.pr_user = mail
-            user_id = payload["id"]
-            self.group_name = f"{user_id}"
 
-            print(" pr_user..", self.pr_user)
+            self.privileged = mail
+            print(" pr_user..", self.privileged)
+
 
         if "ordinary" in self.scope["cookies"]:
             token = self.scope["cookies"]["ordinary"]
             payload = jwt.decode(token, settings.SECRET_KEY, settings.JWT_ALGORITHM)
             mail = payload["mail"]
-            self.ordinary = mail
-            user_id = payload["id"]
-            self.group_name = f"{user_id}"
 
+            self.ordinary = mail
             print(self.ordinary)
 
         # Добавляем новую комнату
@@ -92,7 +93,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 created_at=datetime.now(),
             )
         if "privileged" in self.scope["cookies"]:
-            mail = self.pr_user
+            mail = self.privileged
             pr_chat = get_pr_user(mail)
 
             UserChat.objects.create(
@@ -147,7 +148,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.new_message(message=message)
 
             # Отправляем сообщение
-            nick = self.pr_user
+            nick = self.privileged
             await self.channel_layer.group_send(
                 self.group_name,
                 {

@@ -1,3 +1,4 @@
+import uuid
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -7,6 +8,12 @@ class UserPrivileged(User):
     nickname = models.CharField(max_length=30)
     mail = models.EmailField(max_length=120, unique=True)
     file = models.FileField(null=True, blank=True)
+    identifier = models.CharField(
+        max_length=64,
+        unique=True,
+        default=uuid.uuid4().hex,
+        editable=False,
+    )
     email_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     modified_at = models.DateTimeField(auto_now=True, null=True)

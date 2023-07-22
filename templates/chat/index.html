@@ -28,8 +28,8 @@
         <li class="list-group-item my-2">
             <span><sup class="d-block mt-2">nickname</sup> ({{ i.nickname }})</span>
             <hr>
-            <a class="page-link" href="{{ request.user.id }}">
-                details {{ i.mail }}
+            <a class="page-link" href="{{ i.identifier }}">
+                chat.. {{ i.mail }}
             </a>
 
         </li>
@@ -46,7 +46,7 @@
         <li class="list-group-item my-2">
             <span><sup class="d-block mt-2">nickname</sup> ({{ i.nickname }})</span>
             <hr>
-            <a class="page-link" href="{{ i.id }}/">
+            <a class="page-link" href="{{ i.identifier }}/">
                 chat.. {{ i.mail }}
             </a>
 

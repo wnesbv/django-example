@@ -1,0 +1,9 @@
+id,nickname,mail,password,file,identifier,is_active,email_verified,created_at,modified_at
+
+,one-ordinary,one-ordinary@gmail.com,,,,True,True,,,
+,two-ordinary,two-ordinary@gmail.com,,,,True,True,,,
+,three-ordinary,three-ordinary@gmail.com,,,,True,True,,,
+,four-ordinary,four-ordinary@gmail.com,,,,True,True,,,
+,five-ordinary,five-ordinary@gmail.com,,,,True,True,,,
+,six-ordinary,six-ordinary@gmail.com,,,,True,True,,,
+,seven-ordinary,seven-ordinary@gmail.com,,,,True,True,,,

@@ -1,3 +1,2 @@
 # django-example
-registration with confirmation mail,
-jwt cookie authentication,
+registration with email confirmation, authorization and authentication three in one, cookie jwt, import_export, chat..

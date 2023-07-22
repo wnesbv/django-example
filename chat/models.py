@@ -21,7 +21,7 @@ class UserChat(models.Model):
         UserPrivileged, null=True, blank=True, on_delete=models.CASCADE
     )
     # ..
-    recipient = models.CharField(max_length=30)
+    recipient = models.CharField(max_length=64)
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(null=True)
     modified_at = models.DateTimeField(null=True)
