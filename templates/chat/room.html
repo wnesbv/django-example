@@ -4,41 +4,61 @@
 {% block content %}
 
 
-<form method="POST" enctype="multipart/form-data">
+<form class="card my-4" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    <sup>message</sup>
-    <input id="message-input" type="text" size="200" class="form-control my-4">
-    <input id="btn-submit" type="button" value="Send">
+    <sub class="m-2">message</sub>
+    <div class="card-body border-bottom p-3">
+        <input id="message-input" type="text" size="200" class="form-control my-4">
+    </div>
+    <div class="card-footer">
+        <input id="btn-submit" type="button" value="Send" class="btn btn-sm btn-outline-primary my-2">
+    </div>
 </form>
 
-<ul id="chat"></ul>
+
+<div id="chat"></div>
+
 
 <ul class="list-group list-group-flush flex-wrap">
-    {% if pr_list %}
-    {% for i in  pr_list %}
+{% if admin_list %}
+{% for i in  admin_list %}
 
-    <li class="list-group-item"><sup>id</sup> {{ i.id }}</li>
-    <li class="list-group-item my-2">
-        <span><sup class="d-block">nick</sup> ({{ i.nick }})</span>
-        <span><sup class="d-block mt-4">remark</sup> ({{ i.remark }})</span>
-        <span><sup class="d-block mt-4">created_at</sup> {{ i.created_at }}</span>
-    </li>
+<li class="list-group-item"><sup>id</sup> {{ i.id }}</li>
+<li class="list-group-item my-2">
+    <span><sup class="d-block">nick</sup> ({{ i.nick }})</span>
+    <span><sup class="d-block mt-4">remark</sup> ({{ i.remark }})</span>
+    <span><sup class="d-block mt-4">created_at</sup> {{ i.created_at }}</span>
+</li>
 
-    {% endfor %}
-    {% endif %}
+{% endfor %}
+{% endif %}
 
-    {% if or_list %}
-    {% for i in  or_list %}
+<ul class="list-group list-group-flush flex-wrap">
+{% if pr_list %}
+{% for i in  pr_list %}
 
-    <li class="list-group-item"><sup>id</sup> {{ i.id }}</li>
-    <li class="list-group-item my-2">
-        <span><sup class="d-block">nick</sup> ({{ i.nick }})</span>
-        <span><sup class="d-block mt-4">remark</sup> ({{ i.remark }})</span>
-        <span><sup class="d-block mt-4">created_at</sup> {{ i.created_at }}</span>
-    </li>
+<li class="list-group-item"><sup>id</sup> {{ i.id }}</li>
+<li class="list-group-item my-2">
+    <span><sup class="d-block">nick</sup> ({{ i.nick }})</span>
+    <span><sup class="d-block mt-4">remark</sup> ({{ i.remark }})</span>
+    <span><sup class="d-block mt-4">created_at</sup> {{ i.created_at }}</span>
+</li>
 
-    {% endfor %}
-    {% endif %}
+{% endfor %}
+{% endif %}
+
+{% if or_list %}
+{% for i in  or_list %}
+
+<li class="list-group-item"><sup>id</sup> {{ i.id }}</li>
+<li class="list-group-item my-2">
+    <span><sup class="d-block">nick</sup> ({{ i.nick }})</span>
+    <span><sup class="d-block mt-4">remark</sup> ({{ i.remark }})</span>
+    <span><sup class="d-block mt-4">created_at</sup> {{ i.created_at }}</span>
+</li>
+
+{% endfor %}
+{% endif %}
 </ul>
 
 
@@ -55,14 +75,36 @@ const webSocket = new WebSocket(websocket_str);
  
 webSocket.onmessage = function(e) {
     const data = JSON.parse(e.data);
-    chat.innerHTML += "<li>" + data.message + "</li>" + "<li>" + data.nick + "</li>" + "<li>" + data.created_at + "</li>"
-};
 
+    const { username } = data;
+    const receive_user = '{{request.user}}';
+    console.log("receive_user", receive_user)
+    console.log("username", username)
+
+    const ordinary_user = '{{ordinary}}';
+    console.log("ordinary_user", ordinary_user)
+
+    if (receive_user != "AnonymousUser") {
+        if (receive_user === username) {
+            chat.innerHTML += "<ul class='list-group mb-2'>" + "<li>" + data.message + "</li>" + "<li>" + data.username + "</li>" + "<li>" + data.created_at + "</li>" + "</ul>";
+        } else {
+            chat.innerHTML += "<ul class='list-group bg-light mb-2'>" + "<li>"  + data.message + "</li>" + "<li>" + data.username + "</li>" + "<li>" + data.created_at + "</li>" + "</ul>";
+        }
+    
+    } else {
+        if (ordinary_user === username) {
+            chat.innerHTML += "<ul class='list-group mb-2'>" + "<li>" + data.message + "</li>" + "<li>" + " AnonymousUser " + data.username + "</li>" + "<li>" + data.created_at + "</li>" + "</ul>";
+        } else {
+            chat.innerHTML += "<ul class='list-group bg-light mb-2'>" + "<li>" + data.message + "</li>" + "<li>" + " AnonymousUser " + data.username + "</li>" + "<li>" + data.created_at + "</li>" + "</ul>";
+        }
+    }
+
+};
  
 btnSubmit.addEventListener("click", () => {
     message = input.value;
     webSocket.send(JSON.stringify({
-        "message": message
+        "message": message,
     }));
     input.value = "";
 })

@@ -11,15 +11,16 @@ class UserChat(models.Model):
     remark = models.CharField(max_length=100, null=True, blank=True)
     file = models.FileField(null=True, blank=True)
     #..
-    user_chat = models.OneToOneField(
-        User, null=True, blank=True, on_delete=models.CASCADE, parent_link=True
-    )
-    or_chat = models.ForeignKey(
-        UserOrdinary, null=True, blank=True, on_delete=models.CASCADE
+    user_chat = models.ForeignKey(
+        User, null=True, blank=True, on_delete=models.CASCADE, related_name="admin_chat",
     )
     pr_chat = models.ForeignKey(
         UserPrivileged, null=True, blank=True, on_delete=models.CASCADE
     )
+    or_chat = models.ForeignKey(
+        UserOrdinary, null=True, blank=True, on_delete=models.CASCADE
+    )
+
     # ..
     recipient = models.CharField(max_length=64)
     is_active = models.BooleanField(default=False)

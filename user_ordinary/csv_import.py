@@ -1,7 +1,7 @@
 from datetime import datetime
 from pathlib import Path
 
-import tempfile, csv, uuid
+import tempfile, bcrypt, csv, uuid
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -40,6 +40,7 @@ def import_csv(request):
             csvf.write(contents)
 
         url_f.file.close()
+        salt = bcrypt.gensalt()
 
         with open(temp.name, "r", encoding="utf-8") as csvfile:
             models.UserOrdinary.objects.bulk_create(
@@ -48,7 +49,8 @@ def import_csv(request):
                         **{
                             "nickname": i["nickname"],
                             "mail": i["mail"],
-                            "password": bytes(i["password"], encoding='utf8'),
+                            # "password": bytes(i["password"], encoding='utf8'),
+                            "password": bcrypt.hashpw(("password").encode(), salt),
                             "file": i["file"],
                             "identifier": uuid.uuid4().hex,
                             "is_active": i["is_active"],
