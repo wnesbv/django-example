@@ -15,7 +15,6 @@
     </div>
 </form>
 
-
 <div id="chat"></div>
 
 
@@ -62,54 +61,8 @@
 </ul>
 
 
-<script>
+{% endblock %}
 
-let chat = document.querySelector("#chat")
-let input = document.querySelector("#message-input")
-let btnSubmit = document.querySelector("#btn-submit")
- 
-const ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-const websocket_str = `${ws_scheme}://${window.location.host}/ws/chat/{{ uustr }}`;
-
-const webSocket = new WebSocket(websocket_str);
- 
-webSocket.onmessage = function(e) {
-    const data = JSON.parse(e.data);
-
-    const { username } = data;
-    const receive_user = '{{request.user}}';
-    console.log("receive_user", receive_user)
-    console.log("username", username)
-
-    const ordinary_user = '{{ordinary}}';
-    console.log("ordinary_user", ordinary_user)
-
-    if (receive_user != "AnonymousUser") {
-        if (receive_user === username) {
-            chat.innerHTML += "<ul class='list-group mb-2'>" + "<li>" + data.message + "</li>" + "<li>" + data.username + "</li>" + "<li>" + data.created_at + "</li>" + "</ul>";
-        } else {
-            chat.innerHTML += "<ul class='list-group bg-light mb-2'>" + "<li>"  + data.message + "</li>" + "<li>" + data.username + "</li>" + "<li>" + data.created_at + "</li>" + "</ul>";
-        }
-    
-    } else {
-        if (ordinary_user === username) {
-            chat.innerHTML += "<ul class='list-group mb-2'>" + "<li>" + data.message + "</li>" + "<li>" + " AnonymousUser " + data.username + "</li>" + "<li>" + data.created_at + "</li>" + "</ul>";
-        } else {
-            chat.innerHTML += "<ul class='list-group bg-light mb-2'>" + "<li>" + data.message + "</li>" + "<li>" + " AnonymousUser " + data.username + "</li>" + "<li>" + data.created_at + "</li>" + "</ul>";
-        }
-    }
-
-};
- 
-btnSubmit.addEventListener("click", () => {
-    message = input.value;
-    webSocket.send(JSON.stringify({
-        "message": message,
-    }));
-    input.value = "";
-})
-
-</script>
-
-
+{% block js_chat %}
+    {% include "chat/js_chat.html" %}
 {% endblock %}

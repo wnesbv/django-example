@@ -1,5 +1,7 @@
 
 from datetime import datetime, timedelta
+from collections import defaultdict
+
 import json, jwt
 
 from asgiref.sync import sync_to_async
@@ -31,6 +33,7 @@ def get_or_user(mail):
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
+    room_connected_users = defaultdict(set)
 
     def __init__(self, *args, **kwargs):
         super().__init__(args, kwargs)
@@ -76,9 +79,52 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Добавляем новую комнату
         await self.channel_layer.group_add(self.group_name, self.channel_name)
 
-
-        quantity = len(self.channel_layer.groups.get(self.group_name, {}).items())
+        quantity = len(
+            self.channel_layer.groups.get(self.group_name, {}).items()
+        )
         print(" len..", quantity)
+
+
+        # ..
+        if self.scope["user"] != AnonymousUser() and "privileged" not in self.scope["cookies"]:
+
+            self.room_connected_users[self.group_name].add(str(self.user))
+
+            await self.channel_layer.group_send(
+                self.group_name,
+                {
+                    'type': 'user_connect',
+                    'username': list(self.room_connected_users[self.group_name]),
+                    'message': quantity,
+                    "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                }
+            )
+        if "privileged" in self.scope["cookies"]:
+
+            self.room_connected_users[self.group_name].add(self.privileged)
+
+            await self.channel_layer.group_send(
+                self.group_name,
+                {
+                    'type': 'user_connect',
+                    'username': list(self.room_connected_users[self.group_name]),
+                    'message': quantity,
+                    "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                }
+            )
+        if "ordinary" in self.scope["cookies"]:
+
+            self.room_connected_users[self.group_name].add(self.ordinary)
+
+            await self.channel_layer.group_send(
+                self.group_name,
+                {
+                    'type': 'user_connect',
+                    'username': list(self.room_connected_users[self.group_name]),
+                    'message': quantity,
+                    "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                }
+            )
 
 
     # ..
@@ -87,11 +133,34 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Отключаем пользователя
         await self.channel_layer.group_discard(self.group_name, self.channel_name)
 
+        if self.scope["user"] != AnonymousUser() and "privileged" not in self.scope["cookies"]:
+            self.room_connected_users[self.group_name].remove(self.user)
+
+        if "privileged" in self.scope["cookies"]:
+            self.room_connected_users[self.group_name].remove(self.privileged)
+
+        if "ordinary" in self.scope["cookies"]:
+            self.room_connected_users[self.group_name].remove(self.ordinary)
+
+
+    async def user_connect(self, event):
+        username = event["username"]
+        message = event["message"]
+        created_at = event["created_at"]
+
+        await self.send(text_data=json.dumps({
+            'type': 'player_connect',
+            "username": username,
+            "message": message,
+            "created_at": created_at,
+        }))
+
 
     # ..
     @database_sync_to_async
     # Создания нового сообщения в БД
     def new_message(self, message):
+        print(" message..", message)
 
         # Создаём сообщение в БД
         username = self.scope["user"]
@@ -178,7 +247,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 },
             )
 
-
         if "ordinary" in self.scope["cookies"]:
 
             # Добавляем сообщение в БД
@@ -196,16 +264,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 },
             )
 
+
     # ..
     # Метод для отправки сообщения клиентам
     async def chat_message(self, event):
+        print(" event..", event)
+
+        # Получаем сообщение от receive
+        username = event["username"]
+        message = event["message"]
+        created_at = event["created_at"]
 
         if self.scope["user"] != AnonymousUser() and "privileged" not in self.scope["cookies"]:
-
-            # Получаем сообщение от receive
-            username = event["username"]
-            message = event["message"]
-            created_at = event["created_at"]
 
             # Отправляем сообщение клиентам
             await self.send(
@@ -220,12 +290,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             )
         if "privileged" in self.scope["cookies"]:
 
-            # Получаем сообщение от receive
-            username = event["username"]
-            message = event["message"]
-            created_at = event["created_at"]
-
-            # Отправляем сообщение клиентам
             await self.send(
                 text_data=json.dumps(
                     {
@@ -239,12 +303,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         if "ordinary" in self.scope["cookies"]:
 
-            # Получаем сообщение от receive
-            username = event["username"]
-            message = event["message"]
-            created_at = event["created_at"]
-
-            # Отправляем сообщение клиентам
             await self.send(
                 text_data=json.dumps(
                     {
