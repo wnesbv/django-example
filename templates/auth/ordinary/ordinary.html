@@ -22,13 +22,16 @@
 
 <ul class="list-group list-group-horizontal flex-wrap">
 
-    {% for i in  privileged_list %}
-        <li class="list-group-item my-2">
-            <span><sub class="d-block mt-2">nickname</sub> ({{ i.nickname }})</span>
-            <hr>
-            <span><sup class="d-block">mail</sup> {{ i.mail }}</span>
-        </li>
-    {% endfor %}
+{% for i in  privileged_list %}
+    <li class="list-group-item my-2"><sup>id</sup> {{ i.id }}</li>
+    <li class="list-group-item my-2">
+        <span><sup class="d-block mt-2">username</sup> ({{ i.user_ptr.username }})</span>
+        <hr>
+        <span><sup class="d-block">nickname</sup> ({{ i.nickname }})</span>
+        <hr>
+        <span><sup class="d-block">mail</sup> {{ i.mail }}</span>
+    </li>
+{% endfor %}
 
 </ul>
 
@@ -40,7 +43,7 @@
     {% for i in  ordinary_list %}
         <li class="list-group-item my-2"><sub>id</sub> {{ i.id }}</li>
         <li class="list-group-item my-2">
-            <span><sub class="d-block mt-2">nickname</sub> ({{ i.nickname }})</span>
+            <span><sub class="d-block my-2">nickname</sub> ({{ i.nickname }})</span>
             <hr>
             <span><sup class="d-block">mail</sup> {{ i.mail }}</span>
         </li>

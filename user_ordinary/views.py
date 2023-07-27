@@ -17,6 +17,8 @@ from django.core.exceptions import PermissionDenied
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 
+from django.contrib.auth.models import AnonymousUser
+
 from . import img
 
 from . import models

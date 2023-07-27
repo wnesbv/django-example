@@ -33,7 +33,8 @@ def get_or_user(mail):
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
-    room_connected_users = defaultdict(set)
+
+    who_there = defaultdict(set)
 
     def __init__(self, *args, **kwargs):
         super().__init__(args, kwargs)
@@ -73,6 +74,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             print(" ordinary..", self.ordinary)
 
 
+
         # Принимаем подключаем
         await self.accept()
 
@@ -86,46 +88,46 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 
         # ..
+        created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         if self.scope["user"] != AnonymousUser() and "privileged" not in self.scope["cookies"]:
 
-            self.room_connected_users[self.group_name].add(str(self.user))
+            self.who_there[self.group_name].add(str(self.user))
 
             await self.channel_layer.group_send(
                 self.group_name,
                 {
                     'type': 'user_connect',
-                    'username': list(self.room_connected_users[self.group_name]),
+                    'username': list(self.who_there[self.group_name]),
                     'message': quantity,
-                    "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    "created_at": created_at,
                 }
             )
         if "privileged" in self.scope["cookies"]:
 
-            self.room_connected_users[self.group_name].add(self.privileged)
+            self.who_there[self.group_name].add(self.privileged)
 
             await self.channel_layer.group_send(
                 self.group_name,
                 {
                     'type': 'user_connect',
-                    'username': list(self.room_connected_users[self.group_name]),
+                    'username': list(self.who_there[self.group_name]),
                     'message': quantity,
-                    "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    "created_at": created_at,
                 }
             )
         if "ordinary" in self.scope["cookies"]:
 
-            self.room_connected_users[self.group_name].add(self.ordinary)
+            self.who_there[self.group_name].add(self.ordinary)
 
             await self.channel_layer.group_send(
                 self.group_name,
                 {
                     'type': 'user_connect',
-                    'username': list(self.room_connected_users[self.group_name]),
+                    'username': list(self.who_there[self.group_name]),
                     'message': quantity,
-                    "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    "created_at": created_at,
                 }
             )
-
 
     # ..
     async def disconnect(self, close_code):
@@ -134,13 +136,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_discard(self.group_name, self.channel_name)
 
         if self.scope["user"] != AnonymousUser() and "privileged" not in self.scope["cookies"]:
-            self.room_connected_users[self.group_name].remove(self.user)
+            self.who_there[self.group_name].remove(self.user)
 
         if "privileged" in self.scope["cookies"]:
-            self.room_connected_users[self.group_name].remove(self.privileged)
+            self.who_there[self.group_name].remove(self.privileged)
 
         if "ordinary" in self.scope["cookies"]:
-            self.room_connected_users[self.group_name].remove(self.ordinary)
+            self.who_there[self.group_name].remove(self.ordinary)
 
 
     async def user_connect(self, event):
