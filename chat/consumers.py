@@ -17,6 +17,7 @@ from user_ordinary.models import UserOrdinary
 from user_privileged.models import UserPrivileged
 
 from .models import UserChat
+from .img import update_file
 
 
 def get_username(username):
@@ -74,7 +75,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             print(" ordinary..", self.ordinary)
 
 
-
         # Принимаем подключаем
         await self.accept()
 
@@ -129,6 +129,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 }
             )
 
+
     # ..
     async def disconnect(self, close_code):
 
@@ -161,8 +162,50 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # ..
     @database_sync_to_async
     # Создания нового сообщения в БД
+    def new_file(self, file):
+
+        # Создаём сообщение в БД
+        username = self.scope["user"]
+        if username != AnonymousUser() and "privileged" not in self.scope["cookies"]:
+
+            user_chat = get_username(username)
+
+            UserChat.objects.create(
+                nick=username,
+                user_chat=user_chat,
+                file=update_file(self.group_name, file),
+                recipient=self.group_name,
+                created_at=datetime.now(),
+            )
+        if "privileged" in self.scope["cookies"]:
+
+            username = self.privileged
+            pr_chat = get_pr_user(username)
+
+            UserChat.objects.create(
+                nick=username,
+                pr_chat=pr_chat,
+                file=update_file(self.group_name, file),
+                recipient=self.group_name,
+                created_at=datetime.now(),
+            )
+        if "ordinary" in self.scope["cookies"]:
+
+            mail = self.ordinary
+            or_chat = get_or_user(mail)
+
+            UserChat.objects.create(
+                nick=mail,
+                or_chat=or_chat,
+                file=update_file(self.group_name, file),
+                recipient=self.group_name,
+                created_at=datetime.now(),
+            )
+
+    # ..
+    @database_sync_to_async
+    # Создания нового сообщения в БД
     def new_message(self, message):
-        print(" message..", message)
 
         # Создаём сообщение в БД
         username = self.scope["user"]
@@ -202,7 +245,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 created_at=datetime.now(),
             )
 
-
     # ..
     # Принимаем сообщение от пользователя
 
@@ -210,71 +252,109 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         # Форматируем сообщение из JSON
         text_data_json = json.loads(text_data)
+        print("text_data..", text_data)
 
         # Получаем текст сообщения
-        message = text_data_json["message"]
+
+        message = text_data_json.get("message")
+        file = text_data_json.get("file")
+
         created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         if self.scope["user"] != AnonymousUser() and "privileged" not in self.scope["cookies"]:
 
-            # Добавляем сообщение в БД
-            await self.new_message(message=message)
-
             # Отправляем сообщение
             username = str(self.scope["user"])
-            await self.channel_layer.group_send(
-                self.group_name,
-                {
-                    "type": "chat_message",
-                    "username": username,
-                    "message": message,
-                    "created_at": created_at,
-                },
-            )
+            if file:
+                # Добавляем сообщение в БД
+                await self.new_file(file=file)
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        "type": "chat_message",
+                        "username": username,
+                        "file": file,
+                        "created_at": created_at,
+                    },
+                )
+            if message:
+                await self.new_message(message=message)
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        "type": "chat_message",
+                        "username": username,
+                        "message": message,
+                        "created_at": created_at,
+                    },
+                )
 
         if "privileged" in self.scope["cookies"]:
 
-            # Добавляем сообщение в БД
-            await self.new_message(message=message)
-
             # Отправляем сообщение
             username = self.privileged
-            await self.channel_layer.group_send(
-                self.group_name,
-                {
-                    "type": "chat_message",
-                    "username": username,
-                    "message": message,
-                    "created_at": created_at,
-                },
-            )
+            if file:
+                # Добавляем сообщение в БД
+                await self.new_file(file=file)
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        "type": "chat_message",
+                        "username": username,
+                        "file": file,
+                        "created_at": created_at,
+                    },
+                )
+            if message:
+                await self.new_message(message=message)
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        "type": "chat_message",
+                        "username": username,
+                        "message": message,
+                        "created_at": created_at,
+                    },
+                )
+
 
         if "ordinary" in self.scope["cookies"]:
 
-            # Добавляем сообщение в БД
-            await self.new_message(message=message)
-
             # Отправляем сообщение
             username = self.ordinary
-            await self.channel_layer.group_send(
-                self.group_name,
-                {
-                    "type": "chat_message",
-                    "username": username,
-                    "message": message,
-                    "created_at": created_at,
-                },
-            )
-
+            if file:
+                # Добавляем сообщение в БД
+                await self.new_file(file=file)
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        "type": "chat_message",
+                        "username": username,
+                        "file": file,
+                        "created_at": created_at,
+                    },
+                )
+            if message:
+                await self.new_message(message=message)
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        "type": "chat_message",
+                        "username": username,
+                        "message": message,
+                        "created_at": created_at,
+                    },
+                )
 
     # ..
     # Метод для отправки сообщения клиентам
     async def chat_message(self, event):
-        print(" event..", event)
+        #print(" event..", event)
 
         # Получаем сообщение от receive
         username = event["username"]
-        message = event["message"]
+        message = event.get("message")
+        file = event.get("file")
         created_at = event["created_at"]
 
         if self.scope["user"] != AnonymousUser() and "privileged" not in self.scope["cookies"]:
@@ -285,6 +365,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     {
                         "username": username,
                         "message": message,
+                        "file": file,
                         "created_at": created_at,
                     },
                     ensure_ascii=False,
@@ -297,6 +378,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     {
                         "username": username,
                         "message": message,
+                        "file": file,
                         "created_at": created_at,
                     },
                     ensure_ascii=False,
@@ -310,6 +392,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     {
                         "username": username,
                         "message": message,
+                        "file": file,
                         "created_at": created_at,
                     },
                     ensure_ascii=False,
