@@ -16,7 +16,7 @@ from user_privileged import models as pri_models, views as pri_views
 from user_ordinary import models as ord_models, views as ord_views
 
 
-def Index_view(request):
+def index_view(request):
 
     template = "auth/privileged/privileged.html"
 

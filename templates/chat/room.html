@@ -1,7 +1,9 @@
 {% extends "base.html" %}
-{% block title %} chat room {% endblock %}
+{% block title %} room {% endblock %}
 
 {% block content %}
+
+<h1 class="lead my-4">chat room</h1>
 
 <form class="card my-4" method="POST">
     {% csrf_token %}
@@ -16,11 +18,11 @@
     
 </form>
 
-<form class="card" method="POST" enctype="multipart/form-data">
+<form id="sendimg" class="card" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <sub class="m-2">file</sub>
     <div class="card-body">
-        <input id="file-input" type="file" class="form-control my-4">
+        <input onchange="showFile()" id="file-input" type="file" class="form-control my-4">
     </div>
 
     <div class="card-footer">
@@ -85,5 +87,5 @@
 {% endblock %}
 
 {% block js_chat %}
-    {% include "chat/js_chat.html" %}
+    {% include "chat/img64_chat.html" %}
 {% endblock %}

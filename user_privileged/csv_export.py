@@ -58,4 +58,3 @@ def export_csv(request):
 
             return response
         return False
-    return False

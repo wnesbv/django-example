@@ -20,4 +20,4 @@ class UserOrdinary(models.Model):
     modified_at = models.DateTimeField(null=True)
 
     def __str__(self):
-        return self.mail
+        return str(self.mail)

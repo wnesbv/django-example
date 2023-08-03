@@ -202,6 +202,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 created_at=datetime.now(),
             )
 
+
     # ..
     @database_sync_to_async
     # Создания нового сообщения в БД
@@ -252,7 +253,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         # Форматируем сообщение из JSON
         text_data_json = json.loads(text_data)
-        print("text_data..", text_data)
+        #print("text_data..", text_data)
 
         # Получаем текст сообщения
 

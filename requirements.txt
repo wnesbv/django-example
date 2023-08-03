@@ -5,4 +5,6 @@ python-dotenv
 PyJWT
 Pillow
 django-import-export
+channels
+channels[daphne]
 

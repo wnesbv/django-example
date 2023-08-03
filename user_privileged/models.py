@@ -26,4 +26,4 @@ class UserPrivileged(User):
     )
 
     def __str__(self):
-        return self.mail
+        return str(self.mail)

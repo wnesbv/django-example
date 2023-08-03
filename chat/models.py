@@ -28,4 +28,4 @@ class UserChat(models.Model):
     modified_at = models.DateTimeField(null=True)
 
     def __str__(self):
-        return self.nick
+        return str(self.nick)

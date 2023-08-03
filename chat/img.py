@@ -1,7 +1,8 @@
 
 from datetime import datetime
-from pathlib import Path, PurePosixPath
-import io, os, base64
+
+import io, os, base64, json
+
 from PIL import Image
 
 from . import views
@@ -15,10 +16,11 @@ def update_file(uustr, file):
     save_path = f"./static/upload/chat/{uustr}/"
     os.makedirs(save_path, exist_ok=True)
 
-    with Image.open(
-        io.BytesIO(base64.decodebytes(bytes(file, "utf-8")))
-    ) as fle:
-        save_img = f"{save_path}" + f"{f_time.strftime('%Y-%m-%d-%H-%M-%S')}.{(fle.format).lower()}"
+    with Image.open(io.BytesIO(base64.decodebytes(bytes(file, "utf-8")))) as fle:
+        save_img = (
+            f"{save_path}"
+            + f"{f_time.strftime('%Y-%m-%d-%H-%M-%S')}.{(fle.format).lower()}"
+        )
         fle.save(save_img)
 
     img = Image.open(save_img)
