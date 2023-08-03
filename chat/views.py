@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from user_ordinary.models import UserOrdinary
 from user_privileged.models import UserPrivileged
 
+from user_ordinary.views import get_active_user
 from . import models
 
 
@@ -45,12 +46,14 @@ def room(request, uustr):
 
         if "ordinary" in request.COOKIES:
 
+            ordinary = get_active_user(request)
             or_list = models.UserChat.objects.prefetch_related(
                 "user_chat", "pr_chat", "or_chat"
             ).filter(recipient=uustr)
             content = {
                 "uustr": uustr,
                 "or_list": or_list,
+                "ordinary": ordinary,
             }
             return render(request, "chat/room.html", content)
         return redirect("/")
