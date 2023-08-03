@@ -1,14 +1,14 @@
 
 <script>
 
-let num = document.querySelector("#num");
-let chat = document.querySelector("#chat");
+let num = document.querySelector("#num")
+let chat = document.querySelector("#chat")
 
-let input = document.querySelector("#message-input");
-let inputfile = document.querySelector("#file-input");
+let input = document.querySelector("#message-input")
+let inputfile = document.querySelector("#file-input")
 
-let btnmsg = document.querySelector("#msg-submit");
-let btnfile = document.querySelector("#file-submit");
+let btnmsg = document.querySelector("#msg-submit")
+let btnfile = document.querySelector("#file-submit")
 
 const ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
 const websocket_str = `${ws_scheme}://${window.location.host}/ws/chat/{{ uustr }}`;
@@ -16,197 +16,79 @@ const websocket_str = `${ws_scheme}://${window.location.host}/ws/chat/{{ uustr }
 // ..
 const webSocket = new WebSocket(websocket_str);
 // ..
-webSocket.onmessage = function (e) {
+webSocket.onmessage = function(e) {
     const data = JSON.parse(e.data);
 
     const { username } = data;
-    console.log("username", typeof username);
+    console.log("username", typeof username)
 
-    const receive_user = "{{request.user}}";
-    console.log("receive_user", receive_user);
-    console.log("username", username);
+    const receive_user = '{{request.user}}';
+    console.log("receive_user", receive_user)
+    console.log("username", username)
 
-    const ordinary_user = "{{ordinary}}";
-    console.log("ordinary_user", ordinary_user);
+    const ordinary_user = '{{ordinary}}';
+    console.log("ordinary_user", ordinary_user)
 
     const { message } = data;
     const { file } = data;
-    console.log("message", typeof message);
+    console.log("message", typeof message)
 
     if (typeof message === "number") {
-        num.innerHTML +=
-            "<div>" +
-            "<span>" +
-            "in the chat: " +
-            data.message +
-            "</span>" +
-            "<span>" +
-            ", username: " +
-            data.username +
-            "</span>" +
-            ", time: " +
-            "<time>" +
-            data.created_at +
-            "</time>" +
-            "</div>";
+        num.innerHTML += "<div>" + "<span>" + "in the chat: " + data.message + "</span>" + "<span>" + ", username: " + data.username + "</span>" + ", time: " + "<time>" + data.created_at + "</time>" + "</div>";
     } else {
-        if (receive_user != "AnonymousUser") {
-            if (receive_user === username) {
-                if (data.file) {
-                    chat.innerHTML +=
-                        "<figure>" +
-                        "<img src=" +
-                        "data:image/png;base64," +
-                        data.file +
-                        " width='240'/></figure>" +
-                        "<ul class='list-group mb-2'>" +
-                        "<li>" +
-                        data.username +
-                        "</li>" +
-                        "<li>" +
-                        data.created_at +
-                        "</li>" +
-                        "</ul>";
-                } else {
-                    chat.innerHTML +=
-                        "<ul class='list-group mb-2'>" +
-                        "<li>" +
-                        data.message +
-                        "</li>" +
-                        "<li>" +
-                        data.username +
-                        "</li>" +
-                        "<li>" +
-                        data.created_at +
-                        "</li>" +
-                        "</ul>";
-                }
-            } else {
-                if (data.file) {
-                    chat.innerHTML +=
-                        "<figure>" +
-                        "<img src=" +
-                        "data:image/png;base64," +
-                        data.file +
-                        " width='240'/></figure>" +
-                        "<ul class='list-group bg-light mb-2'>" +
-                        "<li>" +
-                        data.username +
-                        "</li>" +
-                        "<li>" +
-                        data.created_at +
-                        "</li>" +
-                        "</ul>";
-                } else {
-                    chat.innerHTML +=
-                        "<ul class='list-group bg-light mb-2'>" +
-                        "<li>" +
-                        data.message +
-                        "</li>" +
-                        "<li>" +
-                        " AnonymousUser " +
-                        data.username +
-                        "</li>" +
-                        "<li>" +
-                        data.created_at +
-                        "</li>" +
-                        "</ul>";
-                }
-            }
+
+    if (receive_user != "AnonymousUser") {
+        if (receive_user === username) {
+            if (data.file) {
+            chat.innerHTML += "<figure>" + "<img src=" + "data:image/png;base64,"+ data.file + " width='240'/></figure>" + "<ul class='list-group mb-2'>" + "<li>" + data.username + "</li>" + "<li>" + data.created_at + "</li>" + "</ul>";
         } else {
-            if (ordinary_user === username) {
-                if (data.file) {
-                    chat.innerHTML +=
-                        "<figure>" +
-                        "<img src=" +
-                        "data:image/png;base64," +
-                        data.file +
-                        " width='240'/></figure>" +
-                        "<ul class='list-group mb-2'>" +
-                        "<li>" +
-                        " AnonymousUser " +
-                        data.username +
-                        "</li>" +
-                        "<li>" +
-                        data.created_at +
-                        "</li>" +
-                        "</ul>";
-                } else {
-                    chat.innerHTML +=
-                        "<ul class='list-group mb-2'>" +
-                        "<li>" +
-                        data.message +
-                        "</li>" +
-                        "<li>" +
-                        " AnonymousUser " +
-                        data.username +
-                        "</li>" +
-                        "<li>" +
-                        data.created_at +
-                        "</li>" +
-                        "</ul>";
-                }
-            } else {
-                if (data.file) {
-                    chat.innerHTML +=
-                        "<figure>" +
-                        "<img src=" +
-                        "data:image/png;base64," +
-                        data.file +
-                        " width='240'/></figure>" +
-                        "<ul class='list-group bg-light mb-2'>" +
-                        "<li>" +
-                        " AnonymousUser " +
-                        data.username +
-                        "</li>" +
-                        "<li>" +
-                        data.created_at +
-                        "</li>" +
-                        "</ul>";
-                } else {
-                    chat.innerHTML +=
-                        "<ul class='list-group bg-light mb-2'>" +
-                        "<li>" +
-                        data.message +
-                        "</li>" +
-                        "<li>" +
-                        " AnonymousUser " +
-                        data.username +
-                        "</li>" +
-                        "<li>" +
-                        data.created_at +
-                        "</li>" +
-                        "</ul>";
-                }
-            }
+            chat.innerHTML += "<ul class='list-group mb-2'>" + "<li>" + data.message + "</li>" + "<li>" + data.username + "</li>" + "<li>" + data.created_at + "</li>" + "</ul>";}
+        } else {
+            if (data.file) {
+            chat.innerHTML += "<figure>" + "<img src=" + "data:image/png;base64,"+ data.file + " width='240'/></figure>" + "<ul class='list-group bg-light mb-2'>" + "<li>" + data.username + "</li>" + "<li>" + data.created_at + "</li>" + "</ul>";
+        } else {
+            chat.innerHTML += "<ul class='list-group bg-light mb-2'>" + "<li>" + data.message + "</li>" + "<li>" + " AnonymousUser " + data.username + "</li>" + "<li>" + data.created_at + "</li>" + "</ul>";}
         }
+    
+    } else {
+        if (ordinary_user === username) {
+            if (data.file) {
+            chat.innerHTML += "<figure>" + "<img src=" + "data:image/png;base64,"+ data.file + " width='240'/></figure>" + "<ul class='list-group mb-2'>" + "<li>" + " AnonymousUser " + data.username + "</li>" + "<li>" + data.created_at + "</li>" + "</ul>";
+        } else {
+            chat.innerHTML += "<ul class='list-group mb-2'>" + "<li>" + data.message + "</li>" + "<li>" + " AnonymousUser " + data.username + "</li>" + "<li>" + data.created_at + "</li>" + "</ul>";}
+        } else {
+            if (data.file) {
+            chat.innerHTML += "<figure>" + "<img src=" + "data:image/png;base64,"+ data.file + " width='240'/></figure>" + "<ul class='list-group bg-light mb-2'>" + "<li>" + " AnonymousUser " + data.username + "</li>" + "<li>" + data.created_at + "</li>" + "</ul>";
+        } else {
+            chat.innerHTML += "<ul class='list-group bg-light mb-2'>" + "<li>" + data.message + "</li>" + "<li>" + " AnonymousUser " + data.username + "</li>" + "<li>" + data.created_at + "</li>" + "</ul>";}
+        }
+    }
     } // ..
 };
 
 
 btnmsg.addEventListener("click", (event) => {
     message = input.value;
-    webSocket.send(
-        JSON.stringify({
-            message: message,
-        })
-    );
+    webSocket.send(JSON.stringify({
+        'message': message,
+    }));
     input.value = "";
-});
+})
 
 btnfile.addEventListener("click", (event) => {
+    
     file = inputfile.files[0];
-    const reader = new FileReader();
 
-    reader.onload = function (event) {
-        const fileData = event.target.result.split(",")[1];
-        webSocket.send(
-            JSON.stringify({
-                file: fileData,
-            })
-        );
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const fileData = event.target.result.split(',')[1];
+        webSocket.send(JSON.stringify({
+            "file": fileData,
+        }));
     };
     reader.readAsDataURL(file);
 
     inputfile.value = "";
-});
+})
+
+</script>

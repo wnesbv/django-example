@@ -17,7 +17,7 @@ from user_ordinary.models import UserOrdinary
 from user_privileged.models import UserPrivileged
 
 from .models import UserChat
-from .img import update_file
+from .img import img_creat, update_file
 
 
 def get_username(username):
@@ -201,7 +201,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 recipient=self.group_name,
                 created_at=datetime.now(),
             )
-
 
     # ..
     @database_sync_to_async

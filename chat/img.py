@@ -8,6 +8,25 @@ from PIL import Image
 from . import views
 
 
+def img_creat(file):
+
+    dtm = datetime.now()
+    year = dtm.strftime("%Y")
+    month = dtm.strftime("%m")
+    day = dtm.strftime("%d")
+
+
+    save_path = f"./static/upload/{year}'-'{month}/{day}/"
+    file_path = f"{save_path}/{file.name}"
+
+    os.makedirs(save_path, exist_ok=True)
+
+    with open(f"{file_path}", "wb") as fle:
+        fle.write(file.file.read())
+
+    return file_path.replace(".", "", 1)
+
+
 def update_file(uustr, file):
 
     basewidth = 800
