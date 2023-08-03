@@ -197,7 +197,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             UserChat.objects.create(
                 nick=mail,
                 or_chat=or_chat,
-                file=img_creat(file),
+                file=update_file(self.group_name, file),
                 recipient=self.group_name,
                 created_at=datetime.now(),
             )
